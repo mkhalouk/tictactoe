@@ -1,36 +1,43 @@
+import java.util.HashMap;
+
 public class Board {
     
     // A board has 9 cells, 3 rows and 3 columns
-    private char[][] board;
+    // Each cell is represented from 1 to 9 horizontally
+    private HashMap<Integer, String> board = new HashMap<Integer, String>();
 
     public Board() {
-        this.board = new char[3][3];
         // initialize the array
-        for(int row = 0; row < board.length; row++) {
-            for(int col = 0; col < board[0].length; col++) {
-                this.setBoard(row, col, ' ');
-            }
+        // we print the numbers of the corresponding cell in the cell in order to give the user the info where to put its symbol
+        for(int cell = 1; cell <= 3*3; cell++) {
+            this.addToBoard(cell, Integer.toString(cell));
         }
     }
 
-    public void setBoard(int cellX, int cellY, char value) {
-        this.board[cellX][cellY] = value;
+    public HashMap<Integer, String> getBoard() {
+        return board;
     }
 
-    public char getBoardXY(int cellX, int cellY) {
-        return this.board[cellX][cellY];
+    public void addToBoard(int cell, String value) {
+        this.board.put(Integer.valueOf(cell), value);
+    }
+
+    public String getCellValue(int cell) {
+        return this.board.get(Integer.valueOf(cell));
+    }
+
+    public void setCellValue(int cell, String value) {
+        this.addToBoard(cell, value);
     }
 
     public void printBoard() {
-        for(int row = 0; row < board.length; row++) {
-            System.out.println("+---+---+---+");
-            for(int col = 0; col < board[0].length; col++) {
-                // char c = this.getBoardXY(row, col);
-                // System.out.println(this.getBoardXY(row, col));
-                System.out.print("| " + this.getBoardXY(row, col) + " ");
-            }
-            System.out.print("|\n");
-        }
         System.out.println("+---+---+---+");
+        for(int cell = 1; cell <= 3*3; cell++) {
+            System.out.print("| " + this.getCellValue(cell) + " ");
+            if (cell % 3 == 0) {
+                System.out.print("|\n");
+                System.out.println("+---+---+---+");
+            }
+        }
     }
 }
