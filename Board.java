@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Board {
     
@@ -26,8 +27,24 @@ public class Board {
         return this.board.get(Integer.valueOf(cell));
     }
 
-    public void setCellValue(int cell, String value) {
-        this.addToBoard(cell, value);
+    // Only authorized values : X or O
+    public boolean setCellValue(int cell, String value) {
+        if(value.equals("X") || value.equals("O")) {
+            this.addToBoard(cell, value);
+            return true;
+        } 
+        System.out.println("You need to choose between X or O");
+        return false;
+    }
+
+    // In order to be available, a cell has to be different than X and O
+    public boolean isCellAvailable(int cell) {
+        return !((this.getCellValue(cell)).equals("X")) && !((this.getCellValue(cell)).equals("O"));
+    }
+
+    // Test if all cells have been written
+    public boolean isBoardFull() {
+        return (new HashSet<String>(this.board.values()).size() == 2);
     }
 
     public void printBoard() {
