@@ -1,11 +1,14 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Board {
     
     // A board has 9 cells, 3 rows and 3 columns
     // Each cell is represented from 1 to 9 horizontally
-    private HashMap<Integer, String> board = new HashMap<Integer, String>();
+    // In the hashmap the String[] represents the tuple [symbol, cell index]
+    private HashMap<Integer, String[]> board = new HashMap<Integer, String[]>();
 
     public Board() {
         // initialize the array
@@ -15,16 +18,16 @@ public class Board {
         }
     }
 
-    public HashMap<Integer, String> getBoard() {
+    public HashMap<Integer, String[]> getBoard() {
         return board;
     }
 
     public void addToBoard(int cell, String value) {
-        this.board.put(Integer.valueOf(cell), value);
+        (this.getBoard()).put(Integer.valueOf(cell), new String [] {value, Integer.toString(cell)});
     }
 
     public String getCellValue(int cell) {
-        return this.board.get(Integer.valueOf(cell));
+        return (this.getBoard()).get(Integer.valueOf(cell))[0]; // at index 0 we have the symbol
     }
 
     // Only authorized values : X or O
@@ -44,7 +47,12 @@ public class Board {
 
     // Test if all cells have been written
     public boolean isBoardFull() {
-        return (new HashSet<String>(this.board.values()).size() == 2);
+        ArrayList<String> occurrences = new ArrayList<String>();
+        for(String[] value : (this.getBoard()).values()) {
+            occurrences.add(value[0]); // at index 0 we have the symbol
+        }
+
+        return (new HashSet<String>(occurrences).size() == 2);
     }
 
     public void printBoard() {

@@ -1,3 +1,5 @@
 Need to FIX
+- Winning condition
 - scanner close and open
 - the fact that if we select a bad cell the condition will go on the first time but not the second time and it shifts to the other player
+- delimit cell numbers from 1 to 9
