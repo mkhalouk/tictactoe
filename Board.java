@@ -11,11 +11,7 @@ public class Board {
     private HashMap<Integer, String[]> board = new HashMap<Integer, String[]>();
 
     public Board() {
-        // initialize the array
-        // we print the numbers of the corresponding cell in the cell in order to give the user the info where to put its symbol
-        for(int cell = 1; cell <= 3*3; cell++) {
-            this.addToBoard(cell, Integer.toString(cell));
-        }
+        this.initialize();
     }
 
     public HashMap<Integer, String[]> getBoard() {
@@ -24,6 +20,14 @@ public class Board {
 
     public void addToBoard(int cell, String value) {
         (this.getBoard()).put(Integer.valueOf(cell), new String [] {value, Integer.toString(cell)});
+    }
+
+    public void initialize() {
+        // initialize the array
+        // we print the numbers of the corresponding cell in the cell in order to give the user the info where to put its symbol
+        for(int cell = 1; cell <= 3*3; cell++) {
+            this.addToBoard(cell, Integer.toString(cell));
+        }
     }
 
     public String getCellValue(int cell) {
@@ -64,5 +68,6 @@ public class Board {
                 System.out.println("+---+---+---+");
             }
         }
+        System.out.println("");
     }
 }
