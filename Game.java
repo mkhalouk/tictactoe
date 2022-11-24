@@ -5,20 +5,8 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Game {
-    // final ArrayList<int[]> winningCombo = new ArrayList<int[]>(
-    //     Arrays.asList(
-    //         new int[]{1,2,3}, new int[]{4,5,6}, new int[]{7,8,9}, // horizontal
-    //         new int[]{1,4,7}, new int[]{2,5,8}, new int[]{3,6,9}, // vertical
-    //         new int[]{1,5,9}, new int[]{3,5,7} // diagonal
-    //     )
-    // );
-
-    // final Integer[][] winningCombo = new Integer[][] {
-    //     new Integer[]{1,2,3}, new Integer[]{4,5,6}, new Integer[]{7,8,9}, // horizontal
-    //     new Integer[]{1,4,7}, new Integer[]{2,5,8}, new Integer[]{3,6,9}, // vertical
-    //     new Integer[]{1,5,9}, new Integer[]{3,5,7} // diagonal
-    // };
     List<Integer[]> winningCombo;
+    private boolean continueGame = true;
 
     Game() {
         this.winningCombo = new ArrayList<>(
@@ -28,6 +16,16 @@ public class Game {
                 new Integer[]{1,5,9}, new Integer[]{3,5,7} // diagonal
             )
         );
+
+        this.setContinueGame(true);
+    }
+
+    public boolean isContinueGame() {
+        return continueGame;
+    }
+
+    public void setContinueGame(boolean continueGame) {
+        this.continueGame = continueGame;
     }
 
     public void startGame(Player p1, Player p2, Board board) {
@@ -41,7 +39,7 @@ public class Game {
             System.out.println(username_p1 + " select your symbol (X or O)");
             String symbol = sc.nextLine();
             if (symbol.equals("X") || symbol.equals("O")) {
-                p1.setSymbol(sc.nextLine());
+                p1.setSymbol(symbol);
                 break;
             }
             System.out.println("Choice not valid.");
@@ -64,13 +62,23 @@ public class Game {
             }
             
             this.playTurn(p1, board, sc);
-            if(this.continueGame(p1, board, sc))
-                board.initialize();
+            if(this.checkEndRound(p1, board, sc)) {
+                if(this.isContinueGame()) {
+                    board.initialize();
+                    board.printBoard();
+                } else {
+                    break;
+                }
+            }
 
             this.playTurn(p2, board, sc);
-            if(this.continueGame(p2, board, sc)) {
-                board.initialize();
-                board.printBoard();
+            if(this.checkEndRound(p2, board, sc)) {
+                if(this.isContinueGame()) {
+                    board.initialize();
+                    board.printBoard();
+                } else {
+                    break;
+                }
             }
         }
         sc.close();
@@ -84,12 +92,15 @@ public class Game {
         System.out.println(p.getUsername() + " your turn to play");
         System.out.print("Select the cell number to put your symbol : ");
         int cell = Integer.parseInt(sc.nextLine());
-        if (board.isCellAvailable(cell)) {
-            board.setCellValue(cell, p.getSymbol());
-        } else {
-            System.out.println(p.getUsername() + " cell not available");
-            System.out.print("Select the cell number to put your symbol : ");
-            cell = Integer.parseInt(sc.nextLine());
+        while(true) {
+            if ((1 <= cell && cell <= 9) && board.isCellAvailable(cell)) {
+                board.setCellValue(cell, p.getSymbol());
+                break;
+            } else {
+                System.out.println(p.getUsername() + " cell not available");
+                System.out.print("Select the cell number to put your symbol : ");
+                cell = Integer.parseInt(sc.nextLine());
+            }
         }
 
         board.printBoard();
@@ -120,10 +131,11 @@ public class Game {
         return won;
     }
 
-    public boolean continueGame(Player p, Board board, Scanner sc) {
+    public boolean checkEndRound(Player p, Board board, Scanner sc) {
         if(board.isBoardFull() || this.won(p, board)) {
-            System.out.println("Do want to have a rematch?");
-            return this.rematch(sc.nextLine());
+            System.out.println("Do want to have a rematch? (y/n)");
+            this.setContinueGame(this.rematch(sc.nextLine()));
+            return true;
         }
         return false;
     }
